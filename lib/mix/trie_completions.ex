@@ -26,11 +26,16 @@ defmodule Mix.Tasks.Trie.Completions do
   #
   # PRIVATE
   #
+  #
+  @files %{
+    words25k: "priv/assets/popular.txt",
+    words172k: "priv/assets/enable1.txt"
+  }
 
   defp do_run({[], [prefix]}) do
-    IO.puts("Loading 170k words dictionary...")
+    IO.puts("Loading 172k words dictionary...")
 
-    dict = File.stream!("priv/assets/enable1.txt") |> Enum.into(Trie.A.new())
+    dict = File.stream!(@files[:words172k]) |> Enum.into(Trie.A.new())
 
     IO.puts("Dictionary loaded!")
 
@@ -41,11 +46,6 @@ defmodule Mix.Tasks.Trie.Completions do
 
     :ok
   end
-
-  @files %{
-    words25k: "priv/assets/popular.txt",
-    words172k: "priv/assets/enable1.txt"
-  }
 
   @benchee_opts time: 20,
                 warmup: 5,
@@ -63,30 +63,30 @@ defmodule Mix.Tasks.Trie.Completions do
     IO.puts("Loading dictionaries...")
 
     dictionary_a_25k = File.stream!(@files[:words25k]) |> Enum.into(Trie.A.new())
-    dictionary_a_170k = File.stream!(@files[:words172k]) |> Enum.into(Trie.A.new())
+    dictionary_a_172k = File.stream!(@files[:words172k]) |> Enum.into(Trie.A.new())
     dictionary_b_25k = File.stream!(@files[:words25k]) |> Enum.into(Trie.B.new())
-    dictionary_b_170k = File.stream!(@files[:words172k]) |> Enum.into(Trie.B.new())
+    dictionary_b_172k = File.stream!(@files[:words172k]) |> Enum.into(Trie.B.new())
     dictionary_c_25k = File.stream!(@files[:words25k]) |> Enum.into(Trie.C.new())
-    dictionary_c_170k = File.stream!(@files[:words172k]) |> Enum.into(Trie.C.new())
+    dictionary_c_172k = File.stream!(@files[:words172k]) |> Enum.into(Trie.C.new())
 
     spec = %{
       "Trie.A 25k" => fn ->
         Trie.A.completions(dictionary_a_25k, prefix)
       end,
-      "Trie.A 170k" => fn ->
-        Trie.A.completions(dictionary_a_170k, prefix)
+      "Trie.A 172k" => fn ->
+        Trie.A.completions(dictionary_a_172k, prefix)
       end,
       "Trie.B 25k" => fn ->
         Trie.B.completions(dictionary_b_25k, prefix)
       end,
-      "Trie.B 170k" => fn ->
-        Trie.B.completions(dictionary_b_170k, prefix)
+      "Trie.B 172k" => fn ->
+        Trie.B.completions(dictionary_b_172k, prefix)
       end,
       "Trie.C 25k" => fn ->
         Trie.C.completions(dictionary_c_25k, prefix)
       end,
-      "Trie.C 170k" => fn ->
-        Trie.C.completions(dictionary_c_170k, prefix)
+      "Trie.C 172k" => fn ->
+        Trie.C.completions(dictionary_c_172k, prefix)
       end
     }
 
